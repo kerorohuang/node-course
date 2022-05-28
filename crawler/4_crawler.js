@@ -17,7 +17,7 @@ require("dotenv").config();
   });
 
   let [data, fields] = await connection.execute("SELECT * FROM stocks");
-  console.log(data);
+  console.log(data);   // data 是個陣列
 
   connection.end();
 })();
