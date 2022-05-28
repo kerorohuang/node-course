@@ -4,6 +4,10 @@ const express = require("express");
 // 利用 express 來建立一個 express application
 const app = express();
 
+// 使用第三方開發的中間鍵 cors
+const cors = require('cors');
+app.use(cors());
+
 const mysql = require("mysql2");
 
 require("dotenv").config();
