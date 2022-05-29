@@ -118,23 +118,28 @@ app.get('/stocks/:stockId', async(req, res, next) => {
   // 計算 offset 是多少(計算要跳過幾筆)
   let offset = (page-1) * aPage;
   console.log('offset', offset);
+
   // 取得這一頁的資料 select * ... limit ? offset ?
-  // let dataPerPage = await pool.execute("SELECT * FROM stock_prices offset = " + offset, aPage);
-  // console.log('dataPerPage', dataPerPage);
+  let [pageResults] = await pool.execute("SELECT * FROM stock_prices WHERE stock_id = ? ORDER BY date DESC LIMIT ? OFFSET ?", [req.params.stockId, aPage, offset]);
+
   // 回覆給前端
 
   // 空資料(查無資料)有兩種處理方式:
   // 1. 200 OK 就回 []
   // 2. 回覆 404
-  if(allResults.length === 0){
+  if(pageResults.length === 0){
     // 404 範例
-    res.status(404).json(allResults);
+    res.status(404).json(pageResults);
   } else {
     res.json({
       // 用來儲存所有跟頁碼相關的資訊
-      pagination:{},
+      pagination:{
+        total, 
+        totalPage, 
+        page
+      },
       // 真正的資料
-      data: allResults,
+      data: pageResults,
     });
   }
 });
